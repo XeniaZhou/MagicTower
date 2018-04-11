@@ -8,7 +8,7 @@ My version of *Tower of the Sorcerer* is a RPG-style game as well. The hero need
 unknown NPC to know the story and get keys to open the door to the next floor and save the princess. However, because 
 of the time-consuming of collecting data, the kinds and numbers of monsters, equipments and mazes will reduce. 
 
-###Details
+### Details
 - the game has:
  - five floors.
  - three kinds of keys.
