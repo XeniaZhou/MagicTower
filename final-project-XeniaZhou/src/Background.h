@@ -14,9 +14,12 @@ namespace maps {
 	public:
 		Background();
 		void createMap(std::vector<vector<int>> maps);
-		void resize(int w, int h);
+		void goToNextFloor();
 		void update();
-
-
+		std::vector<vector<BackgroundSegments>> getFloorMap();
+		ofVec2f getPosition();
+		ofRectangle getRec();
+		BackgroundSegments &findIntersectPart(ofRectangle player);
+		bool isEnd();
 	};
 }

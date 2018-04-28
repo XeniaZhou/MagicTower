@@ -26,14 +26,23 @@ namespace maps {
 		ofRectangle rec_;
 	public:
 		BackgroundSegments();
-		BackgroundSegments(BackgroundElement e, int x, int y, int size);
+		BackgroundSegments(int element, int x, int y, int size);
 		void addKey(Key k);
 		void addGem(Gem g);
 		void addMonster(Monster m);
 		void setColor();
 		ofRectangle getRectangle();
-		void replaceElement(BackgroundElement e);
-		Keys getKey();
+		void replaceElement();
+		Key* getKey();
+		Gem* getGem();
+		Monster* getMonster();
+		BackgroundElement getElement();
+		bool containKey();
+		bool containGem();
+		bool containMonster();
 		void drawBackgroundSegment();
+		void removeMonster();
+		void removeKey();
+		void removeGem();
 	};
 }

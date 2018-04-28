@@ -47,3 +47,22 @@ Monsters Monster::getMonsterType() {
 	return m_;
 }
 
+double Monster::getAttack() {
+	return attack_;
+}
+
+double Monster::getDefence() {
+	return defence_;
+}
+
+double Monster::getHealth() {
+	return health_;
+}
+
+void Monster::setHealth(double health) {
+	health_ = health;
+}
+
+bool Monster::isDead() {
+	return health_ <= 0.0;
+}

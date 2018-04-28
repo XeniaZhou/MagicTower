@@ -23,5 +23,10 @@ namespace maps {
 		ofColor getColor();
 
 		Monsters getMonsterType();
+		void setHealth(double health);
+		double getHealth();
+		double getAttack();
+		double getDefence();
+		bool isDead();
 	};
 }

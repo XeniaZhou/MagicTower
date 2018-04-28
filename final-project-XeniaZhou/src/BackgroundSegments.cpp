@@ -9,11 +9,99 @@ BackgroundSegments::BackgroundSegments() {
 	rec_.setSize(0.0, 0.0);
 }
 
-BackgroundSegments::BackgroundSegments(BackgroundElement e, int x, int y, int size) {
-	element_ = e;
+BackgroundSegments::BackgroundSegments(int e, int x, int y, int size) {
+	
 	position_.set(x, y);
 	rec_.setPosition(x, y);
 	rec_.setSize(size, size);
+	switch (e) {
+	case 0:
+		element_ = WALL;
+		key_ = nullptr;
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 1:
+		element_ = FLOOR;
+		key_ = nullptr;
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 2:
+		element_ = REDDOOR;
+		key_ = nullptr;
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 3:
+		element_ = YELLOWDOOR;
+		key_ = nullptr;
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 4:
+		element_ = FLOORDOOR;
+		key_ = nullptr;
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 5:
+		element_ = FLOOR;
+		gem_ = new Gem(REDGEM);
+		key_ = nullptr;
+
+		monster_ = nullptr;
+		break;
+	case 6:
+		element_ = FLOOR;
+		gem_ = new Gem(BLUEGEM);
+		key_ = nullptr;
+
+		monster_ = nullptr;
+		break;
+	case 7:
+		element_ = FLOOR;
+		key_ = new Key(REDKEY);
+	
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 8:
+		element_ = FLOOR;
+		key_ = new Key(YELLOWKEY);
+
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 9:
+		element_ = FLOOR;
+		key_ = new Key(FLOORKEY);
+	
+		gem_ = nullptr;
+		monster_ = nullptr;
+		break;
+	case 10:
+		element_ = FLOOR;
+		monster_ = new Monster(SLIME);
+		key_ = nullptr;
+		gem_ = nullptr;
+	
+		break;
+	case 11:
+		element_ = FLOOR;
+		monster_ = new Monster(GHOST);
+		key_ = nullptr;
+		gem_ = nullptr;
+		break;
+	case 12:
+		element_ = FLOOR;
+		monster_ = new Monster(SOLDIER);
+		key_ = nullptr;
+		gem_ = nullptr;
+		break;
+	
+	}
+	setColor();
 }
 
 void BackgroundSegments::addKey(Key k) {
@@ -29,10 +117,22 @@ void BackgroundSegments::addMonster(Monster m) {
 	monster_ = new Monster(m);
 }
 
+void BackgroundSegments::removeGem() {
+	gem_ = nullptr;
+}
+
+void BackgroundSegments::removeKey() {
+	key_ = nullptr;
+}
+
+void BackgroundSegments::removeMonster() {
+	monster_ = nullptr;
+}
+
 void BackgroundSegments::setColor() {
 	switch (element_) {
 		case WALL:
-			color_ = ofColor(65, 65, 20);
+			color_ = ofColor(31, 31, 7);
 			break;
 		case FLOOR:
 			color_ = ofColor(115, 170, 25);
@@ -53,13 +153,35 @@ ofRectangle BackgroundSegments::getRectangle() {
 	return rec_;
 }
 
-void BackgroundSegments::replaceElement(BackgroundElement e) {
-	element_ = e;
+void BackgroundSegments::replaceElement() {
+	element_ = FLOOR;
 	setColor();
 }
 
-Keys BackgroundSegments::getKey() {
-	return key_->getKeyType;
+Key* BackgroundSegments::getKey() {
+	return key_;
+}
+
+Gem* BackgroundSegments::getGem() {
+	return gem_;
+}
+
+Monster* BackgroundSegments::getMonster() {
+	return monster_;
+}
+
+BackgroundElement BackgroundSegments::getElement() {
+	return element_;
+}
+
+bool BackgroundSegments::containKey() {
+	return key_;
+}
+bool BackgroundSegments::containGem() {
+	return gem_;
+}
+bool BackgroundSegments::containMonster() {
+	return monster_;
 }
 
 void BackgroundSegments::drawBackgroundSegment() {
@@ -67,7 +189,7 @@ void BackgroundSegments::drawBackgroundSegment() {
 	ofDrawRectangle(rec_);
 	if (key_) {
 		ofSetColor(key_->getColor());
-		ofDrawCircle(position_.x, position_.y, rec_.getHeight() / 2);
+		ofDrawCircle(position_.x + rec_.getHeight() / 2, position_.y + rec_.getHeight() / 2, rec_.getHeight() / 2);
 		
 
 	} else if (gem_) {
@@ -78,6 +200,6 @@ void BackgroundSegments::drawBackgroundSegment() {
 	}
 	else if (monster_) {
 		ofSetColor(monster_->getColor());
-		
+		ofDrawRectangle(rec_);
 	}
 }
