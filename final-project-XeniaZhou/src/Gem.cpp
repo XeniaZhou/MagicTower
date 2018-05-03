@@ -1,33 +1,37 @@
 #include "Gem.h"
 
-using namespace maps;
+using namespace tower;
 
 Gem::Gem() {}
 
 Gem::Gem(Gems k) {
 	g_ = k;
-	setColor();
+	setImage();
 }
 
 Gem::Gem(Gem& k) {
 	g_ = k.g_;
-	gem_color_ = ofColor(k.gem_color_);
+	setImage();
 }
 
-void Gem::setColor() {
+void Gem::setImage() {
 	if (g_) {
 		switch (g_) {
 		case REDGEM:
-			gem_color_ = ofColor(140, 45, 10);
+			gem_color_ = ofColor(255, 155, 125);
+			gem_image_.load("image/red-gem.png");
 			break;
 		case BLUEGEM:
-			gem_color_ = ofColor(105, 195, 205);
+			gem_color_ = ofColor(125, 215, 225);
+			gem_image_.load("image/blue-gem.png");
 			break;
 		}
 	}
 }
 
-
+ofImage Gem::getImage() {
+	return gem_image_;
+}
 
 
 ofColor Gem::getColor() {

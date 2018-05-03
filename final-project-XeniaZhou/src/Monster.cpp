@@ -1,6 +1,6 @@
 #include "Monster.h"
 
-using namespace maps;
+using namespace tower;
 
 Monster::Monster() {
 	attack_ = 0.0;
@@ -9,38 +9,57 @@ Monster::Monster() {
 }
 
 Monster::Monster(Monsters monster) {
-	monster_color_ = ofColor(200, 10, 10);
+	monster_color_ = ofColor(255, 255, 255);
 	switch (monster) {
 	case SLIME:
 		m_ = SLIME;
 		attack_ = 10;
 		defence_ = 10;
 		health_ = 10;
+		monster_image_.load("image/slime.png");
 		break;
 	case GHOST:
 		m_ = GHOST;
-		attack_ = 30;
-		defence_ = 5;
-		health_ = 10;
+		attack_ = 25;
+		defence_ = 10;
+		health_ = 15;
+		monster_image_.load("image/ghost.png");
 		break;
 	case SOLDIER:
 		m_ = SOLDIER;
-		attack_ = 20;
-		defence_ = 20;
+		attack_ = 40;
+		defence_ = 40;
+		health_ = 50;
+		monster_image_.load("image/soldier.png");
+		break;
+	case BAT:
+		m_ = BAT;
+		attack_ = 35;
+		defence_ = 35;
 		health_ = 20;
+		monster_image_.load("image/bat.png");
+		break;
+	case SKELETON:
+		m_ = SKELETON;
+		attack_ = 25;
+		defence_ = 25;
+		health_ = 35;
+		monster_image_.load("image/skeleton.png");
 		break;
 	}
 }
 
 Monster::Monster(Monster& monster) {
 	m_ = monster.m_;
-	attack_ = monster.attack_;
-	defence_ = monster.defence_;
-	health_ = monster.health_;
+	Monster(m_);
 }
 
 ofColor Monster::getColor() {
 	return monster_color_;
+}
+
+ofImage Monster::getImage() {
+	return monster_image_;
 }
 
 Monsters Monster::getMonsterType() {

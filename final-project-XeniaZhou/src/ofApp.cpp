@@ -3,39 +3,159 @@
 #include <vector>
 #include <string>
 #include <regex>
+#include <chrono>
+#include <thread>
+
+using namespace tower;
+using namespace std::this_thread;     // sleep_for, sleep_until
+using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
+using std::chrono::system_clock;
+
+const vector<vector<string>> ofApp::rita_lines_ = {
+	{"???: Hi, stranger, I see your confusion, just like me when I first came to this place.", "I: ...so who are you£¿And where am I?",
+	"???: I am Rita, an unfortunate person just like you.", "Rita: I heard a dealer's words that this place is a magic tower, confined many people, \n and the only way to escape from here is to release the princess",
+	"Rita: I tried but failed, but I see you may be good at it. I can give you some tips \n as you move forward, and please always remember, keep concious."
+},
+{"Rita: make sure consider your attack and defense as well as those monsters' \n before you combet them. You cannot get rid of the fight easily, can you?",
+"Rita: ...", "Rita: wait a minute...has you done something sinful? I mean, annoy someone or ...", "I: I don't think so", "Rita: alright, just keep going and forget my previous question"
+
+},
+{"Rita: hi, well, actually I heard some store about my previous question", "Rita: ...", "Rita: the story says most people prisoned here are guilty and they are \n waiting for one to save them...",
+"I: and you know that you are one of 'most people' who cannot leave here", "Rita: ...it's not your business"
+
+},
+{"Rita: I have thought about your words for a while...yes, you are right.\n I did do something that did not sound well...but I did not mean that",
+"I: you are guilty without punishment", "Rita: RIGHT! But I can pay for that! please, I know you are my only hope..."
+
+},
+{"Rita: save me, please"
+}
+};
+
+const vector<string> ofApp::natasha_lines_ = {
+	"???: I am natasha, the princess", "Natasha: you are a person with innocent heart and that is why you are chosen.", 
+	"Natasha: I cannot stand with you becasue of my duty, but I believe on your decision", "Natasha: it is your time now"
+};
 
 
-using namespace maps;
+
+
 //--------------------------------------------------------------
 void ofApp::setup() {
+	bgm_.load("music/bgm.mp3");
+	combat_sound_.load("music/combat.wav");
+	take_item_sound_.load("music/take-gem.wav");
+	died_.load("music/died.mp3");
+	end_.load("music/end.mp3");
+	bgm_.setVolume(0.15);
+	died_.setVolume(0.15);
+	end_.setVolume(0.15);
+	combat_sound_.setVolume(0.3);
+	take_item_sound_.setVolume(0.3);
+	bgm_.play();
+	dialog_box_.setup();
 	state_ = PROCESSING;
-	background_ = Background();
+	vector<vector<int>> total = getTotalMaps();
+	floor_num_ = 0;
+	for (int i = 0; i < total.size(); i++) {
+		Background temp = Background();
+		temp.createMap(total[i]);
+		maps_.push_back(temp);
+	}
+	background_ = &maps_[floor_num_];
+	
+	attack_monster_button_.addListener(this, &ofApp::decideAttackMonster);
+	avoid_monster_button_.addListener(this, &ofApp::decideAvoidMonster);
+	
+	
+	dialog_box_.add(attack_monster_button_.setup("yes"));
+	dialog_box_.add(avoid_monster_button_.setup("no"));
 
-	background_.createMap(getTotalMaps());
+	ofSetFrameRate(60);
+	loader_.load("gif/game-over2.gif");
+	ofEnableAlphaBlending();
+	startTime = ofGetElapsedTimeMillis();
+	
+	ofSetFrameRate(60);
+	loader_rita_.load("gif/change.gif");
+	ofEnableAlphaBlending();
+	startTime2 = ofGetElapsedTimeMillis();
+
+	ofSetFrameRate(60);
+	loader_natasha_.load("gif/order.gif");
+	ofEnableAlphaBlending();
+	startTime3 = ofGetElapsedTimeMillis();
+	
 	player_ = Player();
-	player_.setPosition(background_.getPosition().x, background_.getPosition().y);
-	player_.setSize(background_.getRec().getHeight());
+	player_.setPosition(background_->getPosition().x, background_->getPosition().y);
+	player_.setSize(background_->getRec().getHeight());
+	detecter_ = 0;
+	floor_num_ = 0;
 }
 
-
+int index = 0;
+int index2 = 0;
+int index3 = 0;
 //--------------------------------------------------------------
 void ofApp::update(){
+	
+
 	if (should_update_) {
+		draw();
+		if (state_ == DEAD) {
+			bgm_.stop();
+			died_.play();
+			if (ofGetElapsedTimeMillis() - startTime >= gifDelay) {
+				index++;
+				if (index > loader_.pages.size() - 1) {
+					index = 0;
+				}
+				startTime = ofGetElapsedTimeMillis();
+			}
+		} else 
+		if (state_ == RITAEND) {
+			bgm_.stop();
+			end_.play();
+			if (ofGetElapsedTimeMillis() - startTime2 >= gifDelay2) {
+				index2++;
+				if (index2 > loader_rita_.pages.size() - 1) {
+					index2 = 0;
+				}
+				startTime2 = ofGetElapsedTimeMillis();
+			}
+		} else 
+		if (state_ == NATASHAEND) {
+			bgm_.stop();
+			end_.play();
+			if (ofGetElapsedTimeMillis() - startTime3 >= gifDelay3) {
+				index3++;
+				if (index3 > loader_rita_.pages.size() - 1) {
+					index3 = 0;
+				}
+				startTime3 = ofGetElapsedTimeMillis();
+			}
+		} else 
 		if (state_ == PROCESSING) {
-			BackgroundSegments *segment = &background_.findIntersectPart(player_.getBody());
+			if (!bgm_.getIsPlaying()) {
+				bgm_.play();
+			}
+			BackgroundSegments *segment = &background_->findIntersectPart(player_.getBody());
 			if (segment->containKey()) {
+				take_item_sound_.play();
 				player_.addKey(segment->getKey());
 				segment->removeKey();
-				cout << 60 + player_.getRedKeyNum() << endl;
+				
 			}
 			if (segment->containGem()) {
+				take_item_sound_.play();
 				player_.takeGem(segment->getGem());
 				segment->removeGem();
 			}
 			if (segment->containMonster()) {
+				combat_sound_.play();
 				player_.attackMonster(segment->getMonster());
 				if (player_.isDead()) {
-					state_ = END;			
+					state_ = DEAD;			
 				}
 				else {
 					segment->removeMonster();
@@ -43,7 +163,7 @@ void ofApp::update(){
 			}
 			
 		}	
-		draw();
+		
 	}
 
 	should_update_ = true;
@@ -53,25 +173,69 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	drawInfo();
-	if (state_ == NEXTFLOOR) {
-		background_.goToNextFloor();
-		if (background_.isEnd()) {
-			state_ = END;
-		} else {
-			state_ = PROCESSING;
-		}
+	switch (state_) {
+	case NEXTFLOOR:
+		goToNextFloor();
 		
-	}
-	if (state_ == PROCESSING) {
-		std::vector<vector<BackgroundSegments>> floor_map = background_.getFloorMap();
-		for (int i = 0; i < floor_map[0].size(); i++) {
-			floor_map[0][i].drawBackgroundSegment();
-		}
+		has_talk_with_npc_ = false;
+		state_ = PROCESSING;
+		player_.setPosition(background_->getPosition().x, background_->getPosition().y);
+		
+
+		break;
+	case PROCESSING:
+		background_ = &maps_[floor_num_];
+		background_->update();
+
 		player_.drawPlayer();
+		break;
+	case RITAEND:
+		drawRitaEnd();
+		break;
+	case NATASHAEND:
+		drawNatashaEnd();
+		break;
+	case ENCOUNTER_MONS: {
+		background_->update();
+
+		player_.drawPlayer();
+		ofSetColor(150, 195, 180);
+		ofRectangle temp = ofRectangle(ofGetWindowWidth() / 4.7, ofGetWindowHeight() / 2.5, ofGetWindowHeight(), ofGetWindowWidth() / 6);
+		dialog_box_.setPosition(temp.x + temp.getWidth() / 2, temp.y + temp.getHeight() / 2);
+		ofDrawRectangle(temp);
+		ofSetColor(0, 0, 0);
+		ofDrawBitmapString(text_, ofGetWindowWidth() / 4, ofGetWindowHeight() / 2);
+
+		dialog_box_.draw();
+		break;
 	}
-	if (state_ == END) {
-		drawEnd();
+	case DEAD:
+		drawDied();
+		break;
+	case TALK_WITH_NPC: {
+		if (detecter_ >= content_.size()) {
+			detecter_ = 0;
+			state_ = PROCESSING;
+			has_talk_with_npc_ = true;
+			break;
+		}
+		background_->update();
+
+		player_.drawPlayer();
+		
+			ofSetColor(150, 195, 180);
+			ofRectangle temp2 = ofRectangle(ofGetWindowWidth() / 4.5, ofGetWindowHeight() / 2.5, ofGetWindowHeight(), ofGetWindowWidth() / 6);
+			dialog_box_.setPosition(temp2.x + temp2.getWidth() / 2, temp2.y + temp2.getHeight() / 2);
+			ofDrawRectangle(temp2);
+			ofSetColor(0, 0, 0);
+			ofDrawBitmapString(content_[detecter_], ofGetWindowWidth() / 4, ofGetWindowHeight() / 2);
+			
+		
+		
+		break;
 	}
+	}
+
 }
 
 //--------------------------------------------------------------
@@ -113,9 +277,7 @@ void ofApp::keyPressed(int key){
 			should_update_ = false;
 		}
 	}
-	else if (upper_key == 'R' && state_ == END) {
-		setup();
-	}
+
 }
 
 
@@ -132,7 +294,23 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	ofRectangle intersect = player_.getBody();
+	intersect.setPosition(x, y);
+	BackgroundSegments *intersect_segment = &background_->findIntersectPart(intersect);
+	if (button == 0 && state_ == TALK_WITH_NPC) {
+		detecter_++;
+	}
+	else if (has_talk_with_npc_ && button == 0 && intersect_segment->containNPC() && floor_num_ == 4) {
+		switch (intersect_segment->getNPC()->getName()) {
+		case RITA:
+			state_ = RITAEND;
+			break;
+		case NATASHA:
+			state_ = NATASHAEND;
+			break;
+		}
+	}
+	
 }
 
 //--------------------------------------------------------------
@@ -164,6 +342,7 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
 vector<string> ofApp::splitter(string in_pattern, string& content) {
 	vector<string> split_content;
 
@@ -202,7 +381,7 @@ vector<std::string> ofApp::selectEachImage(string all) {
 	int count_for_separate = 10;
 
 	for (int i = 0; i < each_line.size(); i++) {
-		if (each_line[i] != "") {
+		if (!each_line[i].empty()) {
 			each_image += each_line[i];
 			count_for_separate--;
 		}
@@ -250,12 +429,35 @@ void ofApp::move() {
 		new_step.setPosition(new_step.getX(), new_step.getY() + new_step.getHeight());
 		break;
 	}
-	BackgroundSegments *intersect_segment = &background_.findIntersectPart(new_step);
-	cout << intersect_segment->getElement() << endl;
+	if (new_step.x < background_->getPosition().x || new_step.x > background_->getPosition().x + background_->getRec().getHeight()
+		|| new_step.y < background_->getPosition().y || new_step.y > background_->getPosition().y + background_->getRec().getHeight()) {
+		return;
+	}
+	BackgroundSegments *intersect_segment = &background_->findIntersectPart(new_step);
+
 
 	switch (intersect_segment->getElement()) {
 	case FLOOR:
+		if (intersect_segment->containMonster()) {
+			text_ = "the monster has " + to_string(intersect_segment->getMonster()->getAttack()) + "attack, ";
+			text_ += to_string(intersect_segment->getMonster()->getDefence()) + " defense, and ";
+			text_ += to_string(intersect_segment->getMonster()->getHealth()) + " health.\n";
+			text_ += "Do you want to defeat it?";
+			state_ = ENCOUNTER_MONS;
+			break;
+		}
+		else if (intersect_segment->containNPC()) {
+			if (intersect_segment->getNPC()->getName() == RITA) {
+				content_ = rita_lines_[floor_num_];		
+			}
+			else {
+				content_ = natasha_lines_;
+			}
+			state_ = TALK_WITH_NPC;
+			break;
+		}
 		player_.setPosition(new_step.getX(), new_step.getY());
+		//insert the asking for whether duel the monster if duel then update, else break
 		break;
 	case WALL:
 		break;
@@ -263,17 +465,7 @@ void ofApp::move() {
 		if (player_.useRedKey()) {
 			
 			intersect_segment->replaceElement();   //QUESTION???
-			cout << 3 + intersect_segment->getElement() << endl;
-
-			if (intersect_segment->getElement() != NULL) {
-				cout << intersect_segment->getElement() << endl;
-			}
-			else {
-				cout << "NONE" << endl;
-			}
-			
 			player_.setPosition(new_step.getX(), new_step.getY());
-			cout << "??" << endl;
 			break;
 		}
 		break;
@@ -287,7 +479,7 @@ void ofApp::move() {
 	case FLOORDOOR:
 		if (player_.useFloorKey()) {
 			intersect_segment->replaceElement();
-			player_.setPosition(new_step.getX(), new_step.getY());
+	
 			state_ = NEXTFLOOR;
 			break;
 		}
@@ -296,8 +488,26 @@ void ofApp::move() {
 	
 }
 
-void ofApp::drawEnd() {
+void ofApp::drawRitaEnd() {
+	ofBackground(0);
 
+	ofSetColor(255, 255, 255, 255);
+	ofImage img = loader_rita_.pages[index2];
+
+	ofPixels pix = img.getPixels();
+	img.setFromPixels(pix);
+	img.draw(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+}
+
+void ofApp::drawNatashaEnd() {
+	ofBackground(0);
+
+	ofSetColor(255, 255, 255, 255);
+	ofImage img = loader_natasha_.pages[index3];
+
+	ofPixels pix = img.getPixels();
+	img.setFromPixels(pix);
+	img.draw(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
 }
 
 void ofApp::drawInfo() {
@@ -314,4 +524,56 @@ void ofApp::drawInfo() {
 
 	ofSetColor(0, 0, 0);
 	ofDrawBitmapString(total_info, ofGetWindowWidth() / 10, ofGetWindowHeight() / 10);
+}
+
+
+void ofApp::goToNextFloor() {
+	floor_num_++;
+}
+
+
+
+void ofApp::decideAttackMonster() {
+	state_ = PROCESSING;
+	switch (player_.getDirection()) {
+	case UP:
+		player_.setPosition(player_.getBody().x, player_.getBody().y - player_.getBody().getHeight());
+		break;
+	case RIGHT:
+		player_.setPosition(player_.getBody().x + player_.getBody().getHeight(), player_.getBody().y);
+		break;
+	case LEFT:
+		player_.setPosition(player_.getBody().x - player_.getBody().getHeight(), player_.getBody().y);
+		break;
+	case DOWN:
+		player_.setPosition(player_.getBody().x, player_.getBody().y + player_.getBody().getHeight());
+		break;
+	}
+}
+
+void ofApp::decideAvoidMonster() {
+	state_ = PROCESSING;
+}
+
+void ofApp::drawDied() {
+	ofBackground(0);
+
+	ofSetColor(255, 255, 255, 255);
+	ofImage img = loader_.pages[index];
+	
+	ofPixels pix = img.getPixels();
+	img.setFromPixels(pix);
+	img.draw(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+}
+
+void ofApp::drawCommunication(vector<string> content) {
+	ofSetColor(150, 195, 180);
+	ofRectangle temp = ofRectangle(ofGetWindowWidth() / 4.7, ofGetWindowHeight() / 2.5, ofGetWindowHeight(), ofGetWindowWidth() / 6);
+	dialog_box_.setPosition(temp.x + temp.getWidth() / 2, temp.y + temp.getHeight() / 2);
+	ofDrawRectangle(temp);
+	for (int i = 0; i < content.size(); i++) {
+		ofSetColor(0, 0, 0);
+		ofDrawBitmapString(content[i], ofGetWindowWidth() / 4, ofGetWindowHeight() / 2);
+		Sleep(10000);
+	}
 }

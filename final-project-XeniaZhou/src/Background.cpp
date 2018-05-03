@@ -1,7 +1,7 @@
 #include "Background.h"
 #include <vector>
 
-using namespace maps;
+using namespace tower;
 
 const float Background::size_modifier_ = 0.1;
 
@@ -18,45 +18,44 @@ Background::Background() {
 		background_.setSize(height, height);
 		background_position_.set(width - height, 0);
 	}
+	floor_num_ = 0;
 }
 
-void Background::createMap(std::vector<vector<int>> maps) {
-	floor_map_ = vector<vector<BackgroundSegments>>(5);
+void Background::createMap(std::vector<int> maps) {
 	int count = 0;
 	float y_position = background_position_.y;
-	for (int i = 0; i < maps.size(); i++) {
-		for (int k = 0; k < maps[i].size(); k++) {
+	
+		for (int k = 0; k < maps.size(); k++) {
 			if (count == 10) {
 				count = 0;
 				y_position += background_.getHeight() * size_modifier_;
 			}
 			float adding = count * background_.getHeight() * size_modifier_;
 			float size = background_.getHeight() * size_modifier_;
-			BackgroundSegments each = BackgroundSegments(maps[i][k], background_position_.x + adding,
+			BackgroundSegments each = BackgroundSegments(maps[k], background_position_.x + adding,
 				y_position, size);
-			floor_map_[i].push_back(each);
+			floor_map_.push_back(each);
 			count++;
-		}
+		
 	}
 	
 
 }
 
 bool Background::isEnd() {
-	return floor_map_.empty();
+	return(floor_num_ >= floor_map_.size());
 }
 
-void Background::goToNextFloor() {
-	floor_map_.erase(floor_map_.begin());
-}
+
+
 
 void Background::update() {
-	for (auto each_segment : floor_map_[0]) {
+	for (auto each_segment : floor_map_) {
 		each_segment.drawBackgroundSegment();
 	}
 }
 
-std::vector<vector<BackgroundSegments>> Background::getFloorMap() {
+std::vector<BackgroundSegments> Background::getFloorMap() {
 	return floor_map_;
 }
 
@@ -68,9 +67,9 @@ ofRectangle Background::getRec() {
 	return background_;
 }
 
-BackgroundSegments& maps::Background::findIntersectPart(ofRectangle player) {
-	for (int i = 0; i < floor_map_[0].size(); i++) {
-		BackgroundSegments &segment = floor_map_[0][i];
+BackgroundSegments& tower::Background::findIntersectPart(ofRectangle player) {
+	for (int i = 0; i < floor_map_.size(); i++) {
+		BackgroundSegments &segment = floor_map_[i];
 		if (player.intersects(segment.getRectangle())) {
 			return segment;
 		}

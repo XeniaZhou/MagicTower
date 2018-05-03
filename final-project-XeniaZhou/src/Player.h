@@ -5,7 +5,7 @@
 #include "Key.h"
 
 
-namespace maps {
+namespace tower {
 
 	typedef enum {
 		UP = 0,
@@ -21,6 +21,7 @@ namespace maps {
 		static const float modifier_; // The proportion of the screen width a body square is
 		ofRectangle body_; // the size of a snake body piece based on kbody_size_modifier_
 		ofColor hero_color_;
+		ofImage hero_image_;
 		ofVec2f position_;
 		int red_key_num_;
 		int yellow_key_num_;
@@ -37,6 +38,7 @@ namespace maps {
 		Player(const Player& other); // copy constructor
 		void setPosition(float x, float y);
 		ofColor getColor();
+		ofImage getImage();
 		ofRectangle getBody();
 		void setSize(float size);
 		void addKey(Key* key);

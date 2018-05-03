@@ -1,2 +1,4 @@
+ofxGif
+ofxGifDecoder
 ofxGui
-ofxVectorGraphics
+ofxTexturePlane

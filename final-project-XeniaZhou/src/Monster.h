@@ -1,17 +1,21 @@
 #pragma once
 #include "ofMain.h"
 
-namespace maps {
+namespace tower {
 	typedef enum {
-		SLIME = 0,
+		EMPTYMONSTER = 0,
+		SLIME,
 		GHOST,
-		SOLDIER
+		SOLDIER,
+		BAT,
+		SKELETON
 
 	} Monsters;
 
 	class Monster {
 	private:
 		Monsters m_;
+		ofImage monster_image_;
 		ofColor monster_color_;
 		double attack_;
 		double defence_;
@@ -21,7 +25,7 @@ namespace maps {
 		Monster(Monsters k);
 		Monster(Monster& k);
 		ofColor getColor();
-
+		ofImage getImage();
 		Monsters getMonsterType();
 		void setHealth(double health);
 		double getHealth();

@@ -96,7 +96,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxTexturePlane\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -115,7 +115,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxTexturePlane\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -134,7 +134,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxTexturePlane\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -156,7 +156,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src;..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxTexturePlane\src</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -179,7 +179,13 @@
     <ClCompile Include="src\Gem.cpp" />
     <ClCompile Include="src\Key.cpp" />
     <ClCompile Include="src\Monster.cpp" />
+    <ClCompile Include="src\NPC.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Store.cpp" />
+    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src\ofxGif.cpp" />
+    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifDecoder.cpp" />
+    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifFile.cpp" />
+    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifFrame.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxBaseGui.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxButton.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxGuiGroup.cpp" />
@@ -188,8 +194,7 @@
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxSlider.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxSliderGroup.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxToggle.cpp" />
-    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\src\ofxVectorGraphics.cpp" />
-    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs\CreEPS.cpp" />
+    <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxTexturePlane\src\ofxTexturePlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
@@ -198,7 +203,13 @@
     <ClInclude Include="src\Gem.h" />
     <ClInclude Include="src\Key.h" />
     <ClInclude Include="src\Monster.h" />
+    <ClInclude Include="src\NPC.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Store.h" />
+    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src\ofxGif.h" />
+    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifDecoder.h" />
+    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifFile.h" />
+    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifFrame.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxBaseGui.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxButton.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxGui.h" />
@@ -208,9 +219,7 @@
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxSlider.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxSliderGroup.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGui\src\ofxToggle.h" />
-    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\src\ofxVectorGraphics.h" />
-    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs\CreEPS.hpp" />
-    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxVectorGraphics\libs\CreEPS_Types.hpp" />
+    <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxTexturePlane\src\ofxTexturePlane.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

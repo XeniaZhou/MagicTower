@@ -1,32 +1,35 @@
 #include "Key.h"
 
-using namespace maps;
+using namespace tower;
 
 Key::Key() {}
 
 Key::Key(Keys k) {
 	k_ = k;
-	setColor();
+	setImage();
 }
 
 
 
 Key::Key(Key& k) {
 	k_ = k.k_;
-	key_color_ = ofColor(k.key_color_);
+	setImage();
 }
 
-void Key::setColor() {
+void Key::setImage() {
 	if (k_) {
 		switch (k_) {
 		case REDKEY:
-			key_color_ = ofColor(160, 45, 10);
+			key_color_ = ofColor(255, 155, 125);
+			key_image_.load("image/red-key.png");
 			break;
 		case YELLOWKEY:
-			key_color_ = ofColor(225, 180, 60);
+			key_color_ = ofColor(255, 235, 90);
+			key_image_.load("image/yellow-key.png");
 			break;
 		case FLOORKEY:
-			key_color_ = ofColor(100, 100, 100);
+			key_color_ = ofColor(180, 180, 180);
+			key_image_.load("image/floor-key.png");
 			break;
 		}
 	}
@@ -35,12 +38,14 @@ void Key::setColor() {
 
 
 
-ofColor Key::getColor() {
-	return key_color_;
+ofImage Key::getImage() {
+	return key_image_;
 }
 
 
-
+ofColor Key::getColor() {
+	return key_color_;
+}
 
 Keys Key::getKeyType() {
 	return k_;

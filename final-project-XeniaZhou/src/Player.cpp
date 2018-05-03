@@ -1,6 +1,6 @@
 #include "Player.h"
 
-using namespace maps;
+using namespace tower;
 
 const float Player::modifier_ = 0.1;
 
@@ -19,7 +19,8 @@ Player::Player() {
 	coin_ = 0;
 	exp_ = 0.0;
 	level_ = 0;
-	hero_color_ = ofColor(145, 0, 185);
+	hero_color_ = ofColor(255, 255, 255);
+	hero_image_.load("image/hero.png");
 }
 
 Player::Player(const Player& other) {
@@ -40,7 +41,8 @@ Player::Player(const Player& other) {
 	exp_ = other.exp_;
 	level_ = other.level_;
 	body_.set(other.body_);
-	hero_color_ = ofColor(145, 0, 185);
+	hero_color_ = ofColor(255, 255, 255);
+	hero_image_.load("image/hero.png");
 }
 
 void Player::setPosition(float x, float y) {
@@ -54,6 +56,9 @@ void Player::setSize(float size) {
 
 ofColor Player::getColor() {
 	return hero_color_;
+}
+ofImage Player::getImage() {
+	return hero_image_;
 }
 ofRectangle Player::getBody() {
 	return body_;
@@ -82,23 +87,22 @@ bool Player::isDead() {
 }
 
 void Player::attackMonster(Monster* monster) {
-	if (isDead()) {
-		return;
-	}
-	if (monster->isDead()) {
+	while (!isDead()) {
+		if (monster->isDead()) {
 		coin_ += monster->getAttack() + monster->getDefence();
 		levelUp(monster->getAttack() + monster->getDefence());
-		return;
+		break;
 	}
-	if (attack_ > monster->getDefence()) {
-		double new_monster_health = monster->getHealth() + monster->getDefence() - attack_;
-		monster->setHealth(new_monster_health);
-	} 
-	if (monster->getAttack() > defense_) {
-		double new_player_health = current_health_ + defense_ - monster->getAttack();
-		current_health_ = new_player_health;
+		if (attack_ > monster->getDefence()) {
+			double new_monster_health = monster->getHealth() + monster->getDefence() - attack_;
+			monster->setHealth(new_monster_health);
+		} 
+		if (monster->getAttack() > defense_) {
+			double new_player_health = current_health_ + defense_ - monster->getAttack();
+			current_health_ = new_player_health;
+		}
 	}
-	attackMonster(monster);
+	
 	
 }
 
@@ -117,15 +121,22 @@ void Player::takeGem(Gem* gem) {
 
 void Player::levelUp(double experience) {
 	exp_ += experience;
-	double reqirement = ((level_ + 1) * level_) * 8.0 + 10.0;
-	if (exp_ >= reqirement) {
-		level_++;
-		attack_ += level_ * 0.5;
-		defense_ += level_ * 0.5;
-		max_health_ += level_ * 10;
-		current_health_ = max_health_;
-		exp_ -= reqirement;
+	while (true) {
+		double reqirement = ((level_ + 1) * level_) * 18.0 + 30.0;
+	
+		if (exp_ >= reqirement) {
+			level_++;
+			attack_ += level_ * 0.8;
+			defense_ += level_ * 0.8;
+			max_health_ += level_ * 10;
+			current_health_ = max_health_;
+			exp_ -= reqirement;
+		}
+		else {
+			break;
+		}
 	}
+	
 }
 bool Player::useRedKey() {
 	if (red_key_num_ == 0) {
@@ -177,7 +188,7 @@ void Player::setDirection(Direction dir) {
 
 void Player::drawPlayer() {
 	ofSetColor(hero_color_);
-	ofDrawRectangle(body_);
+	hero_image_.draw(position_.x, position_.y, body_.getHeight(), body_.getHeight());
 }
 
 int Player::getRedKeyNum() {

@@ -1,9 +1,10 @@
 #pragma once
 #include "ofMain.h"
 
-namespace maps {
+namespace tower {
 	typedef enum {
-		REDKEY = 0,
+		EMPTYKEY = 0,
+		REDKEY,
 		YELLOWKEY,
 		FLOORKEY
 	} Keys;
@@ -12,13 +13,14 @@ namespace maps {
 	private:
 		Keys k_;
 		ofColor key_color_;
+		ofImage key_image_;
 	public:
 		Key();
 		Key(Keys k);
 		Key(Key& k);
-		void setColor();
+		void setImage();
 		ofColor getColor();
-	
+		ofImage getImage();
 		Keys getKeyType();
 	};
 }
