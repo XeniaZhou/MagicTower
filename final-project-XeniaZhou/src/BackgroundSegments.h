@@ -26,32 +26,33 @@ namespace tower {
 		BackgroundElement element_;
 		ofColor segment_color_;
 		ofImage segment_image_;
-		ofRectangle rec_;
+		ofRectangle rec_;												//these are all pointers and containers of data
 	public:
 		BackgroundSegments();
-		BackgroundSegments(int element, int x, int y, int size);
+		BackgroundSegments(int element, int x, int y, int size);		//constructor
 		
 		void addKey(Key k);
 		void addGem(Gem g);
 		void addMonster(Monster m);
 		void setImage();
-		ofRectangle getRectangle();
-		void replaceElement();
+		void replaceElement();											//data change method
 
+		ofRectangle getRectangle();
 		NPC* getNPC();
 		Key* getKey();
 		Gem* getGem();
 		Monster* getMonster();
-		BackgroundElement getElement();
+		BackgroundElement getElement();									//getter
 
 		bool containKey();
 		bool containGem();
 		bool containMonster();
-		bool containNPC();
+		bool containNPC();												//used when we need to detect whether we have items to pick, monster to fight or NPC to talk
 
-		void drawBackgroundSegment();
+		void drawBackgroundSegment();									//draw each segment
+
 		void removeMonster();
 		void removeKey();
-		void removeGem();
+		void removeGem();												//delete and set to nullptr
 	};
 }

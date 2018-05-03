@@ -18,7 +18,6 @@ Background::Background() {
 		background_.setSize(height, height);
 		background_position_.set(width - height, 0);
 	}
-	floor_num_ = 0;
 }
 
 void Background::createMap(std::vector<int> maps) {
@@ -32,7 +31,7 @@ void Background::createMap(std::vector<int> maps) {
 			}
 			float adding = count * background_.getHeight() * size_modifier_;
 			float size = background_.getHeight() * size_modifier_;
-			BackgroundSegments each = BackgroundSegments(maps[k], background_position_.x + adding,
+			BackgroundSegments each = BackgroundSegments(maps[k], background_position_.x + adding, //set the position of segment
 				y_position, size);
 			floor_map_.push_back(each);
 			count++;
@@ -41,12 +40,6 @@ void Background::createMap(std::vector<int> maps) {
 	
 
 }
-
-bool Background::isEnd() {
-	return(floor_num_ >= floor_map_.size());
-}
-
-
 
 
 void Background::update() {

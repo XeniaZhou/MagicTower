@@ -14,9 +14,7 @@ of the time-consuming of collecting data, the kinds and numbers of monsters, equ
   - three kinds of keys.
   - five kinds of monsters.
   - two kinds of juwelry to increase the ATK or DEF.
-  - first-aid.
   - HP, ATK, DEF system.
-  - coin and exp system.
   - stores to purchase weapon.
   - an unknown NPC to talk with and understand the story.
   - a princess waiting for help.
@@ -33,10 +31,8 @@ system.
 and accomplish some other functions like using I to check the items.
 
 ### Other LIbraries and Resources I may Use
-- The [Boost Library](https://www.boost.org/users/history/version_1_66_0.html).
-  - this library contains regex, which is helpful for me to to match input for name.
-  - it also contains graph library to create graphic characters of monsters.
-- The GUI Library (maybe).
+- The ofgui addon
+- The ofxGif addon
 - also character graphs from the original *Tower of the Sorcerer*
 
 ### Requirements

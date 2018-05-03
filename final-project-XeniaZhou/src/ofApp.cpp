@@ -7,9 +7,7 @@
 #include <thread>
 
 using namespace tower;
-using namespace std::this_thread;     // sleep_for, sleep_until
-using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
-using std::chrono::system_clock;
+
 
 const vector<vector<string>> ofApp::rita_lines_ = {
 	{"???: Hi, stranger, I see your confusion, just like me when I first came to this place.", "I: ...so who are you£¿And where am I?",
@@ -48,12 +46,19 @@ void ofApp::setup() {
 	died_.load("music/died.mp3");
 	end_.load("music/end.mp3");
 	bgm_.setVolume(0.15);
-	died_.setVolume(0.15);
+	died_.setVolume(0.12);
 	end_.setVolume(0.15);
 	combat_sound_.setVolume(0.3);
 	take_item_sound_.setVolume(0.3);
-	bgm_.play();
+	bgm_.play();							//sound loading and setting
+
 	dialog_box_.setup();
+	attack_monster_button_.addListener(this, &ofApp::decideAttackMonster);
+	avoid_monster_button_.addListener(this, &ofApp::decideAvoidMonster);			//buttons and panel setup
+	dialog_box_.add(attack_monster_button_.setup("yes"));
+	dialog_box_.add(avoid_monster_button_.setup("no"));
+
+
 	state_ = PROCESSING;
 	vector<vector<int>> total = getTotalMaps();
 	floor_num_ = 0;
@@ -62,14 +67,8 @@ void ofApp::setup() {
 		temp.createMap(total[i]);
 		maps_.push_back(temp);
 	}
-	background_ = &maps_[floor_num_];
+	background_ = &maps_[floor_num_];				//background setup
 	
-	attack_monster_button_.addListener(this, &ofApp::decideAttackMonster);
-	avoid_monster_button_.addListener(this, &ofApp::decideAvoidMonster);
-	
-	
-	dialog_box_.add(attack_monster_button_.setup("yes"));
-	dialog_box_.add(avoid_monster_button_.setup("no"));
 
 	ofSetFrameRate(60);
 	loader_.load("gif/game-over2.gif");
@@ -84,11 +83,11 @@ void ofApp::setup() {
 	ofSetFrameRate(60);
 	loader_natasha_.load("gif/order.gif");
 	ofEnableAlphaBlending();
-	startTime3 = ofGetElapsedTimeMillis();
+	startTime3 = ofGetElapsedTimeMillis();			//gif setup
 	
 	player_ = Player();
 	player_.setPosition(background_->getPosition().x, background_->getPosition().y);
-	player_.setSize(background_->getRec().getHeight());
+	player_.setSize(background_->getRec().getHeight());									//player setup
 	detecter_ = 0;
 	floor_num_ = 0;
 }
@@ -104,18 +103,26 @@ void ofApp::update(){
 		draw();
 		if (state_ == DEAD) {
 			bgm_.stop();
-			died_.play();
-			if (ofGetElapsedTimeMillis() - startTime >= gifDelay) {
-				index++;
-				if (index > loader_.pages.size() - 1) {
-					index = 0;
-				}
-				startTime = ofGetElapsedTimeMillis();
+			if (play_died) {
+				died_.play();
+				play_died = false;
+			}
+			
+			if (ofGetElapsedTimeMillis() - startTime >= gifDelay) {			//
+				index++;													//
+				if (index > loader_.pages.size() - 1) {						//parts like this are used to form the gif
+					index = 0;												//
+				}															//
+				startTime = ofGetElapsedTimeMillis();						//
 			}
 		} else 
 		if (state_ == RITAEND) {
 			bgm_.stop();
-			end_.play();
+			if (play_end) {
+				end_.play();
+				play_end = false;
+			}
+			
 			if (ofGetElapsedTimeMillis() - startTime2 >= gifDelay2) {
 				index2++;
 				if (index2 > loader_rita_.pages.size() - 1) {
@@ -126,7 +133,10 @@ void ofApp::update(){
 		} else 
 		if (state_ == NATASHAEND) {
 			bgm_.stop();
-			end_.play();
+			if (play_end) {
+				end_.play();
+				play_end = false;
+			}
 			if (ofGetElapsedTimeMillis() - startTime3 >= gifDelay3) {
 				index3++;
 				if (index3 > loader_rita_.pages.size() - 1) {
@@ -153,7 +163,7 @@ void ofApp::update(){
 			}
 			if (segment->containMonster()) {
 				combat_sound_.play();
-				player_.attackMonster(segment->getMonster());
+				player_.attackMonster(segment->getMonster());							//148-171 are interactions with the current segment
 				if (player_.isDead()) {
 					state_ = DEAD;			
 				}
@@ -179,7 +189,7 @@ void ofApp::draw(){
 		
 		has_talk_with_npc_ = false;
 		state_ = PROCESSING;
-		player_.setPosition(background_->getPosition().x, background_->getPosition().y);
+		player_.setPosition(background_->getPosition().x, background_->getPosition().y);//reset positon when go to next floor
 		
 
 		break;
@@ -187,7 +197,7 @@ void ofApp::draw(){
 		background_ = &maps_[floor_num_];
 		background_->update();
 
-		player_.drawPlayer();
+		player_.drawPlayer();				//normally keep trake of the change
 		break;
 	case RITAEND:
 		drawRitaEnd();
@@ -202,18 +212,18 @@ void ofApp::draw(){
 		ofSetColor(150, 195, 180);
 		ofRectangle temp = ofRectangle(ofGetWindowWidth() / 4.7, ofGetWindowHeight() / 2.5, ofGetWindowHeight(), ofGetWindowWidth() / 6);
 		dialog_box_.setPosition(temp.x + temp.getWidth() / 2, temp.y + temp.getHeight() / 2);
-		ofDrawRectangle(temp);
+		ofDrawRectangle(temp);																	//here we draw a rectangle as a dialog box
 		ofSetColor(0, 0, 0);
-		ofDrawBitmapString(text_, ofGetWindowWidth() / 4, ofGetWindowHeight() / 2);
+		ofDrawBitmapString(text_, ofGetWindowWidth() / 4, ofGetWindowHeight() / 2);				//and add text
 
-		dialog_box_.draw();
+		dialog_box_.draw();																		//draw the panel and buttons
 		break;
 	}
 	case DEAD:
 		drawDied();
 		break;
 	case TALK_WITH_NPC: {
-		if (detecter_ >= content_.size()) {
+		if (detecter_ >= content_.size()) {														//here we used detecter I mentioned in .h file
 			detecter_ = 0;
 			state_ = PROCESSING;
 			has_talk_with_npc_ = true;
@@ -297,10 +307,10 @@ void ofApp::mousePressed(int x, int y, int button){
 	ofRectangle intersect = player_.getBody();
 	intersect.setPosition(x, y);
 	BackgroundSegments *intersect_segment = &background_->findIntersectPart(intersect);
-	if (button == 0 && state_ == TALK_WITH_NPC) {
+	if (button == 0 && state_ == TALK_WITH_NPC) {										//when talking with npc, left click works as continue print out new line
 		detecter_++;
 	}
-	else if (has_talk_with_npc_ && button == 0 && intersect_segment->containNPC() && floor_num_ == 4) {
+	else if (has_talk_with_npc_ && button == 0 && intersect_segment->containNPC() && floor_num_ == 4) { //this is the place decide which ending
 		switch (intersect_segment->getNPC()->getName()) {
 		case RITA:
 			state_ = RITAEND;
@@ -415,7 +425,7 @@ std::vector<vector<int>> ofApp::getTotalMaps() {
 
 void ofApp::move() {
 	ofRectangle new_step = ofRectangle(player_.getBody());
-	switch (player_.getDirection()) {
+	switch (player_.getDirection()) {					//form a new_step in front of the player
 	case UP:
 		new_step.setPosition(new_step.getX(), new_step.getY() - new_step.getHeight());
 		break;
@@ -431,22 +441,22 @@ void ofApp::move() {
 	}
 	if (new_step.x < background_->getPosition().x || new_step.x > background_->getPosition().x + background_->getRec().getHeight()
 		|| new_step.y < background_->getPosition().y || new_step.y > background_->getPosition().y + background_->getRec().getHeight()) {
-		return;
+		return;						//if the new_step is out of bound, then return.
 	}
 	BackgroundSegments *intersect_segment = &background_->findIntersectPart(new_step);
 
 
 	switch (intersect_segment->getElement()) {
 	case FLOOR:
-		if (intersect_segment->containMonster()) {
-			text_ = "the monster has " + to_string(intersect_segment->getMonster()->getAttack()) + "attack, ";
+		if (intersect_segment->containMonster()) {					//when encounter monsters, collate the information and wait for the response
+			text_ = "the monster has " + to_string(intersect_segment->getMonster()->getAttack()) + " attack, ";
 			text_ += to_string(intersect_segment->getMonster()->getDefence()) + " defense, and ";
 			text_ += to_string(intersect_segment->getMonster()->getHealth()) + " health.\n";
 			text_ += "Do you want to defeat it?";
 			state_ = ENCOUNTER_MONS;
 			break;
 		}
-		else if (intersect_segment->containNPC()) {
+		else if (intersect_segment->containNPC()) { //place to set the content_
 			if (intersect_segment->getNPC()->getName() == RITA) {
 				content_ = rita_lines_[floor_num_];		
 			}
@@ -457,7 +467,7 @@ void ofApp::move() {
 			break;
 		}
 		player_.setPosition(new_step.getX(), new_step.getY());
-		//insert the asking for whether duel the monster if duel then update, else break
+		
 		break;
 	case WALL:
 		break;
@@ -492,7 +502,7 @@ void ofApp::drawRitaEnd() {
 	ofBackground(0);
 
 	ofSetColor(255, 255, 255, 255);
-	ofImage img = loader_rita_.pages[index2];
+	ofImage img = loader_rita_.pages[index2]; //methods from ofxGif
 
 	ofPixels pix = img.getPixels();
 	img.setFromPixels(pix);

@@ -181,7 +181,6 @@
     <ClCompile Include="src\Monster.cpp" />
     <ClCompile Include="src\NPC.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Store.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src\ofxGif.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifDecoder.cpp" />
     <ClCompile Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifFile.cpp" />
@@ -205,7 +204,6 @@
     <ClInclude Include="src\Monster.h" />
     <ClInclude Include="src\NPC.h" />
     <ClInclude Include="src\Player.h" />
-    <ClInclude Include="src\Store.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGif\src\ofxGif.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifDecoder.h" />
     <ClInclude Include="..\..\..\..\Downloads\of_v0.9.8_vs_release\of_v0.9.8_vs_release\addons\ofxGifDecoder\src\ofxGifFile.h" />
